@@ -1,11 +1,16 @@
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useAnimation } from 'framer-motion';
 import { projects } from '../../utils/projectData';
 import { fadeInUp, staggerContainer, scaleOnHover } from '../../utils/motionVariants';
 
 const PortfolioGrid = () => {
   const [hoveredProject, setHoveredProject] = useState(null);
   const [cursorText, setCursorText] = useState('');
+  const [isPaused, setIsPaused] = useState(false);
+  const animationRef = useRef(null);
+  const controls = useAnimation();
+  const animationStartTime = useRef(null);
+  const animationDuration = 50; // seconds
 
   const handleMouseMove = (e) => {
     if (cursorText) {
@@ -17,18 +22,60 @@ const PortfolioGrid = () => {
     }
   };
 
+  const startAnimation = () => {
+    animationStartTime.current = Date.now();
+    controls.start({
+      x: "-50%",
+      transition: {
+        duration: animationDuration,
+        ease: "linear",
+        repeat: Infinity,
+        repeatType: "loop"
+      }
+    });
+  };
+
   const handleProjectHover = (projectId) => {
     setHoveredProject(projectId);
     setCursorText('View Project');
+    setIsPaused(true);
+    controls.stop();
   };
 
   const handleProjectLeave = () => {
     setHoveredProject(null);
     setCursorText('');
+    setIsPaused(false);
+    
+    // Calculate elapsed time and remaining time
+    const elapsedTime = (Date.now() - animationStartTime.current) / 1000;
+    const remainingTime = animationDuration - (elapsedTime % animationDuration);
+    
+    // Calculate progress (0 to 1)
+    const progress = (elapsedTime % animationDuration) / animationDuration;
+    
+    // Calculate current position
+    const currentX = -(progress * 50); // 50% is the total distance
+    
+    // Resume animation from current position
+    controls.start({
+      x: "-50%",
+      transition: {
+        duration: remainingTime,
+        ease: "linear",
+        repeat: Infinity,
+        repeatType: "loop"
+      }
+    });
   };
 
+  useEffect(() => {
+    // Start initial animation
+    startAnimation();
+  }, []);
+
   return (
-    <section id="portfolio" className="py-20 bg-white">
+    <section id="portfolio" className="py-20 bg-white overflow-hidden">
       <div className="container mx-auto px-4">
         {/* Section Header */}
         <motion.div
@@ -46,25 +93,57 @@ const PortfolioGrid = () => {
           </p>
         </motion.div>
 
-        {/* Portfolio Grid */}
-        <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8"
-          variants={staggerContainer}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
-        >
-          {projects.map((project, index) => (
-            <ProjectCard
-              key={project.id}
-              project={project}
-              index={index}
-              isHovered={hoveredProject === project.id}
-              onHover={handleProjectHover}
-              onLeave={handleProjectLeave}
-            />
-          ))}
-        </motion.div>
+        {/* Single Row with All Cards - Mobile and Laptop */}
+        <div className="page2_top overflow-hidden">
+          <motion.div
+            ref={animationRef}
+            className="page2_subtop flex gap-4 lg:gap-6"
+            initial={{ x: 0 }}
+            animate={controls}
+            style={{
+              width: "fit-content",
+              minWidth: "200%"
+            }}
+          >
+            {/* First set of all cards */}
+            {projects.map((project, index) => (
+              <div
+                key={`first-${project.id}`}
+                className="w-72 lg:w-80 flex-shrink-0"
+              >
+                <ProjectCard
+                  project={project}
+                  index={index}
+                  isHovered={hoveredProject === project.id}
+                  onHover={handleProjectHover}
+                  onLeave={handleProjectLeave}
+                  rowIndex={0}
+                  cardIndex={index}
+                  isPaused={isPaused}
+                />
+              </div>
+            ))}
+            
+            {/* Duplicate set for seamless loop */}
+            {projects.map((project, index) => (
+              <div
+                key={`second-${project.id}`}
+                className="w-72 lg:w-80 flex-shrink-0"
+              >
+                <ProjectCard
+                  project={project}
+                  index={index}
+                  isHovered={hoveredProject === project.id}
+                  onHover={handleProjectHover}
+                  onLeave={handleProjectLeave}
+                  rowIndex={0}
+                  cardIndex={index}
+                  isPaused={isPaused}
+                />
+              </div>
+            ))}
+          </motion.div>
+        </div>
 
         {/* Custom Cursor */}
         <AnimatePresence>
@@ -91,34 +170,74 @@ const PortfolioGrid = () => {
   );
 };
 
-const ProjectCard = ({ project, index, isHovered, onHover, onLeave }) => {
+const ProjectCard = ({ project, index, isHovered, onHover, onLeave, rowIndex, cardIndex, isPaused }) => {
   return (
     <motion.div
-      className="group relative overflow-hidden rounded-xl bg-white border-2 border-gray-200 shadow-sm hover:shadow-md"
-      variants={fadeInUp}
-      whileHover={{ y: -10 }}
-      transition={{ type: "spring", stiffness: 300 }}
+      className="group relative overflow-hidden rounded-xl bg-white border-2 border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300"
+      whileHover={{ 
+        scale: 0.95,
+        z: 10
+      }}
+      transition={{ 
+        type: "spring", 
+        stiffness: 300,
+        damping: 20
+      }}
       onMouseEnter={() => onHover(project.id)}
       onMouseLeave={onLeave}
     >
-      {/* Project Image Placeholder */}
-      <div className="aspect-[4/3] bg-gradient-to-br from-primary-cyan/20 to-primary-purple/20 relative overflow-hidden">
+      {/* Project Image */}
+      <div className="aspect-[4/3] relative overflow-hidden bg-gradient-to-br from-primary-cyan/20 to-primary-purple/20">
+        {/* Image */}
+        <img
+          src={`/src/assets/${project.image}`}
+          alt={project.title}
+          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+          onError={(e) => {
+            // Try different extensions if the original fails
+            const originalSrc = e.target.src;
+            const baseName = originalSrc.split('/').pop().split('.')[0];
+            const extensions = ['webp', 'jpg', 'jpeg', 'png', 'avif'];
+            
+            for (let ext of extensions) {
+              if (ext !== originalSrc.split('.').pop()) {
+                const newSrc = originalSrc.replace(/\.[^/.]+$/, `.${ext}`);
+                e.target.src = newSrc;
+                return;
+              }
+            }
+            
+            // If all extensions fail, hide image and show fallback
+            e.target.style.display = 'none';
+            const fallback = e.target.nextSibling;
+            if (fallback) {
+              fallback.style.display = 'block';
+            }
+          }}
+        />
+        
+        {/* Fallback Gradient (hidden by default) */}
+        <div 
+          className="absolute inset-0 bg-gradient-to-br from-primary-cyan/20 to-primary-purple/20"
+          style={{ display: 'none' }}
+        />
+        
+        {/* Overlay Gradient */}
         <motion.div
-          className="absolute inset-0 bg-gradient-to-br from-primary-cyan/10 to-primary-purple/10"
+          className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"
           animate={{
-            scale: isHovered ? 1.1 : 1,
-            rotate: isHovered ? 5 : 0,
+            opacity: isHovered ? 0.3 : 0,
           }}
           transition={{ duration: 0.3 }}
         />
         
         {/* Project Number */}
-        <div className="absolute top-4 left-4 w-8 h-8 bg-primary-cyan rounded-full flex items-center justify-center text-sm font-bold text-white">
+        <div className="absolute top-4 left-4 w-8 h-8 bg-primary-cyan rounded-full flex items-center justify-center text-sm font-bold text-white z-10">
           {index + 1}
         </div>
 
         {/* Category Badge */}
-        <div className="absolute top-4 right-4 bg-primary-purple/80 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium text-white">
+        <div className="absolute top-4 right-4 bg-primary-purple/90 backdrop-blur-sm px-3 py-1 rounded-full text-xs font-medium text-white z-10">
           {project.category}
         </div>
       </div>
