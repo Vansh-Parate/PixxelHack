@@ -190,37 +190,38 @@ const ProjectCard = ({ project, index, isHovered, onHover, onLeave, rowIndex, ca
       <div className="aspect-[4/3] relative overflow-hidden bg-gradient-to-br from-primary-cyan/20 to-primary-purple/20">
         {/* Image */}
         <img
-          src={`/src/assets/${project.image}`}
+          src={project.image}
           alt={project.title}
           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
           onError={(e) => {
-            // Try different extensions if the original fails
-            const originalSrc = e.target.src;
-            const baseName = originalSrc.split('/').pop().split('.')[0];
-            const extensions = ['webp', 'jpg', 'jpeg', 'png', 'avif'];
-            
-            for (let ext of extensions) {
-              if (ext !== originalSrc.split('.').pop()) {
-                const newSrc = originalSrc.replace(/\.[^/.]+$/, `.${ext}`);
-                e.target.src = newSrc;
-                return;
-              }
-            }
-            
-            // If all extensions fail, hide image and show fallback
+            console.log(`Image failed to load: ${project.image}`);
+            // Hide the failed image and show the fallback
             e.target.style.display = 'none';
             const fallback = e.target.nextSibling;
             if (fallback) {
-              fallback.style.display = 'block';
+              fallback.style.display = 'flex';
+            }
+          }}
+          onLoad={(e) => {
+            console.log(`Image loaded successfully: ${project.image}`);
+            // Ensure fallback is hidden when image loads successfully
+            const fallback = e.target.nextSibling;
+            if (fallback) {
+              fallback.style.display = 'none';
             }
           }}
         />
         
-        {/* Fallback Gradient (hidden by default) */}
+        {/* Fallback Gradient with Project Info */}
         <div 
-          className="absolute inset-0 bg-gradient-to-br from-primary-cyan/20 to-primary-purple/20"
+          className="absolute inset-0 bg-gradient-to-br from-primary-cyan/20 to-primary-purple/20 flex items-center justify-center"
           style={{ display: 'none' }}
-        />
+        >
+          <div className="text-center text-white">
+            <div className="text-4xl font-bold mb-2">{project.title.charAt(0)}</div>
+            <div className="text-sm opacity-90">{project.category}</div>
+          </div>
+        </div>
         
         {/* Overlay Gradient */}
         <motion.div

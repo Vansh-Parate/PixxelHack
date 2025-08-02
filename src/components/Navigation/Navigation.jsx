@@ -169,7 +169,7 @@ const Navigation = () => {
             
                                       {/* Menu Panel */}
              <motion.div
-               className="fixed top-4 right-4 h-[calc(100vh-2rem)] w-[850px] bg-white rounded-2xl shadow-2xl z-50"
+               className="fixed top-4 right-4 h-[calc(100vh-2rem)] w-[calc(100vw-2rem)] md:w-[850px] bg-white rounded-2xl shadow-2xl z-50"
                variants={menuVariants}
                initial="closed"
                animate="open"
@@ -233,12 +233,12 @@ const Navigation = () => {
                              {/* Centered Text */}
                                                             <motion.a
                                  href={item.href}
-                                 className="absolute inset-0 flex items-center justify-center text-8xl font-normal text-gray-900 group-hover:text-white transition-all duration-300 relative z-10 tracking-tight uppercase"
+                                 className="absolute inset-0 flex items-center justify-center text-2xl sm:text-4xl md:text-6xl lg:text-8xl font-normal text-gray-900 group-hover:text-white transition-all duration-300 relative z-10 tracking-tight uppercase"
                                  onClick={() => setIsMenuOpen(false)}
                                                                    style={{
                                     fontFamily: 'system-ui, -apple-system, sans-serif',
                                     textShadow: '0 0 0 #000',
-                                    WebkitTextStroke: '2px #000',
+                                    WebkitTextStroke: window.innerWidth < 640 ? '1px #000' : '2px #000',
                                     WebkitTextFillColor: 'transparent',
                                     letterSpacing: '-0.02em',
                                     lineHeight: '0.8',
@@ -260,7 +260,7 @@ const Navigation = () => {
                                   onMouseLeave={(e) => {
                                     e.target.style.WebkitTextFillColor = 'transparent';
                                     e.target.style.textShadow = '0 0 0 #000';
-                                    e.target.style.WebkitTextStroke = '2px #000';
+                                    e.target.style.WebkitTextStroke = window.innerWidth < 640 ? '1px #000' : '2px #000';
                                     e.target.style.transform = 'translateY(20px)';
                                     
                                     // Move the separation line back
