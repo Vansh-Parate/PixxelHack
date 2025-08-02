@@ -1,5 +1,8 @@
+import React from "react";
 import { useState } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
+import { useScroll, useTransform } from 'motion/react';
+
 import Loader from './components/Loader/Loader';
 import Navigation from './components/Navigation/Navigation';
 import Hero from './components/Hero/Hero';
@@ -9,8 +12,10 @@ import TeamSection from './components/Team/TeamSection';
 import ContactSection from './components/Contact/ContactSection';
 import ParticleBackground from './components/ParticleBackground/ParticleBackground';
 
+
 function App() {
   const [isLoading, setIsLoading] = useState(true);
+
 
   const handleLoaderComplete = () => {
     setIsLoading(false);
@@ -43,9 +48,11 @@ function App() {
             <PortfolioGrid />
             <TeamSection />
             <ContactSection />
+
           </motion.div>
         )}
       </AnimatePresence>
+
     </div>
   );
 }
