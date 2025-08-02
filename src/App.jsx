@@ -10,7 +10,6 @@ import ServicesSection from './components/Services/ServicesSection';
 import PortfolioGrid from './components/Portfolio/PortfolioGrid';
 import TeamSection from './components/Team/TeamSection';
 import ContactSection from './components/Contact/ContactSection';
-import ParticleBackground from './components/ParticleBackground/ParticleBackground';
 import GoogleGeminiEffect from './components/Contact/Google-gemini-effect';
 
 function App() {
@@ -35,8 +34,6 @@ function App() {
 
   return (
     <div className="App">
-      {/* Particle Background */}
-      <ParticleBackground />
       
       {/* Loader */}
       <AnimatePresence>
@@ -64,7 +61,7 @@ function App() {
         )}
       </AnimatePresence>
       <div
-        className="h-[600vh] bg-black w-full dark:border dark:border-white/[0.1] rounded-md relative pt-40 overflow-clip"
+        className="h-[300vh] bg-black w-full dark:border dark:border-white/[0.1] rounded-md relative pt-40 overflow-clip"
         ref={ref}
       >
         <GoogleGeminiEffect

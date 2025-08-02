@@ -61,62 +61,98 @@ const Navigation = () => {
     }
   };
 
-
-
   return (
     <>
-      {/* Main Navigation Bar */}
-      <motion.nav
-        className={`fixed top-0 left-0 right-0 z-40 transition-all duration-300 ${
-          isScrolled 
-            ? 'bg-white/95 backdrop-blur-md shadow-lg border-b border-gray-200' 
-            : 'bg-transparent'
-        }`}
-        initial={{ y: -100 }}
-        animate={{ y: 0 }}
-        transition={{ duration: 0.6, ease: "easeOut" }}
-      >
-        <div className="container mx-auto px-4">
-          <div className="flex items-center justify-between h-16 md:h-20">
-                         {/* Logo */}
-             <motion.div
-               className="flex items-center"
-               whileHover={{ scale: 1.05 }}
-               transition={{ type: "spring", stiffness: 400 }}
-             >
-               <a href="#home" className="px-4 py-2 bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.15)] text-black font-bold text-sm uppercase border border-gray-200">
-                 PixelForge Studio
-               </a>
-             </motion.div>
+      {/* Navigation Container */}
+      <div className="fixed top-0 left-0 right-0 z-40">
+        {/* Full Navigation Bar - Visible at start */}
+        <AnimatePresence>
+          {!isScrolled && (
+            <motion.nav
+              className="transition-all duration-300"
+              initial={{ y: -100 }}
+              animate={{ y: 0 }}
+              exit={{ y: -100 }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+            >
+              <div className="container mx-auto px-4">
+                <div className="flex items-center justify-between h-16 md:h-20">
+                  {/* Logo */}
+                  <motion.div
+                    className="flex items-center"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ type: "spring", stiffness: 400 }}
+                  >
+                    <a href="#home" className="px-4 py-2 bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.15)] text-black font-bold text-sm uppercase border border-gray-200">
+                      PixelForge Studio
+                    </a>
+                  </motion.div>
 
-             
+                  {/* Menu Button */}
+                  <motion.button
+                    className="px-4 py-2 bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.15)] text-black font-bold text-sm uppercase flex items-center gap-2 z-50 border border-gray-200 min-w-[100px] justify-center"
+                    onClick={() => setIsMenuOpen(!isMenuOpen)}
+                    whileHover={{ scale: 1.02 }}
+                    whileTap={{ scale: 0.98 }}
+                  >
+                    <motion.span
+                      key={isMenuOpen ? "close" : "menu"}
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 10 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      {isMenuOpen ? "CLOSE" : "MENU"}
+                    </motion.span>
+                    <motion.span
+                      animate={isMenuOpen ? { rotate: 45 } : { rotate: 0 }}
+                      transition={{ duration: 0.3, ease: "easeInOut" }}
+                    >
+                      {isMenuOpen ? "×" : "="}
+                    </motion.span>
+                  </motion.button>
+                </div>
+              </div>
+            </motion.nav>
+          )}
+        </AnimatePresence>
 
-             {/* Menu Button */}
-             <motion.button
-               className="px-4 py-2 bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.15)] text-black font-bold text-sm uppercase flex items-center gap-2 z-50 border border-gray-200 min-w-[100px] justify-center"
-               onClick={() => setIsMenuOpen(!isMenuOpen)}
-               whileHover={{ scale: 1.02 }}
-               whileTap={{ scale: 0.98 }}
-             >
-               <motion.span
-                 key={isMenuOpen ? "close" : "menu"}
-                 initial={{ opacity: 0, x: -10 }}
-                 animate={{ opacity: 1, x: 0 }}
-                 exit={{ opacity: 0, x: 10 }}
-                 transition={{ duration: 0.2 }}
-               >
-                 {isMenuOpen ? "CLOSE" : "MENU"}
-               </motion.span>
-               <motion.span
-                 animate={isMenuOpen ? { rotate: 45 } : { rotate: 0 }}
-                 transition={{ duration: 0.3, ease: "easeInOut" }}
-               >
-                 {isMenuOpen ? "×" : "="}
-               </motion.span>
-             </motion.button>
-          </div>
-        </div>
-      </motion.nav>
+        {/* Menu Button - Only visible when scrolled */}
+        <AnimatePresence>
+          {isScrolled && (
+            <motion.button
+              className="absolute top-4 right-4 px-4 py-2 bg-white rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.15)] text-black font-bold text-sm uppercase flex items-center gap-2 z-50 border border-gray-200 min-w-[100px] justify-center"
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              whileHover={{ scale: 1.02 }}
+              whileTap={{ scale: 0.98 }}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              transition={{ 
+                duration: 0.5, 
+                delay: 0.3,
+                ease: "easeOut"
+              }}
+            >
+              <motion.span
+                key={isMenuOpen ? "close" : "menu"}
+                initial={{ opacity: 0, x: -10 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: 10 }}
+                transition={{ duration: 0.2 }}
+              >
+                {isMenuOpen ? "CLOSE" : "MENU"}
+              </motion.span>
+              <motion.span
+                animate={isMenuOpen ? { rotate: 45 } : { rotate: 0 }}
+                transition={{ duration: 0.3, ease: "easeInOut" }}
+              >
+                {isMenuOpen ? "×" : "="}
+              </motion.span>
+            </motion.button>
+          )}
+        </AnimatePresence>
+      </div>
 
       {/* Mobile Menu Overlay */}
       <AnimatePresence>

@@ -56,33 +56,48 @@ const Hero = () => {
             We're a team of creative professionals passionate about bringing digital visions to life through innovative design and cutting-edge technology.
           </motion.p>
 
-          {/* CTA Buttons */}
+          {/* Single CTA Button - Centered */}
           <motion.div
-            className="flex flex-col sm:flex-row gap-4 justify-center items-center"
+            className="flex justify-center mb-16"
             variants={fadeInUp}
           >
             <motion.button
-              className="bg-gradient-to-r from-primary-cyan to-primary-purple text-white px-8 py-4 rounded-lg font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary-cyan/25 text-lg"
-              whileHover={{ scale: 1.05, y: -2 }}
+              className="bg-black text-white px-10 py-4 rounded-lg font-medium transition-all duration-300 hover:bg-gray-800 hover:shadow-lg hover:shadow-black/25 text-lg relative overflow-hidden group"
+              whileHover={{ 
+                scale: 1.05, 
+                y: -2,
+                transition: { type: "spring", stiffness: 400 }
+              }}
               whileTap={{ scale: 0.95 }}
               transition={{ type: "spring", stiffness: 300 }}
             >
-              View Our Work
-            </motion.button>
-            
-            <motion.button
-              className="border-2 border-primary-cyan text-primary-cyan px-8 py-4 rounded-lg font-medium transition-all duration-300 hover:bg-primary-cyan hover:text-white text-lg"
-              whileHover={{ scale: 1.05, y: -2 }}
-              whileTap={{ scale: 0.95 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              Get in Touch
+              {/* Button Background Animation */}
+              <motion.div
+                className="absolute inset-0 bg-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                initial={{ x: "-100%" }}
+                whileHover={{ x: "0%" }}
+                transition={{ duration: 0.3 }}
+              />
+              
+              {/* Button Text */}
+              <span className="relative z-10">Get in Touch</span>
+              
+              {/* Ripple Effect */}
+              <motion.div
+                className="absolute inset-0 rounded-lg"
+                initial={{ scale: 0, opacity: 0 }}
+                whileHover={{ scale: 1.2, opacity: 0.1 }}
+                transition={{ duration: 0.6 }}
+                style={{
+                  background: "radial-gradient(circle, white 0%, transparent 70%)"
+                }}
+              />
             </motion.button>
           </motion.div>
 
-          {/* Scroll Indicator */}
+          {/* Scroll Indicator - Moved below button */}
           <motion.div
-            className="absolute bottom-8 left-1/2 transform -translate-x-1/2"
+            className="flex justify-center"
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 2, repeat: Infinity }}
           >
