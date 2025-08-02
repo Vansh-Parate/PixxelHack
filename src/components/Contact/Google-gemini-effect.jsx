@@ -1,42 +1,34 @@
 "use client";
-import { cn } from "../../utils/utils";
-import { motion } from "motion/react";
+import { motion } from "framer-motion";
 import React from "react";
+import GlassContactForm from "./Form";
+// Utility function for className merging
+const cn = (...classes) => classes.filter(Boolean).join(' ');
 
 const transition = {
   duration: 0,
   ease: "linear",
 };
 
- const GoogleGeminiEffect = ({
+const GoogleGeminiEffect = ({
   pathLengths,
   title,
   description,
   className
 }) => {
   return (
-    <div className={cn("sticky top-80", className)}>
-      <p
-        className="text-lg md:text-7xl font-normal pb-4 text-center bg-clip-text text-transparent bg-gradient-to-b from-neutral-100 to-neutral-300">
-        {title || `Build with Aceternity UI`}
-      </p>
-      <p
-        className="text-xs md:text-xl font-normal text-center text-neutral-400 mt-4 max-w-lg mx-auto">
-        {description ||
-          `Scroll this component and see the bottom SVG come to life wow this
-        works!`}
-      </p>
+    <div className={cn("sticky top-60 py-40 h-[900px]", className) }>
+      
+      {/* Form Container with Better Positioning */}
       <div
-        className="w-full h-[890px] -top-60 md:-top-40  flex items-center justify-center bg-red-transparent absolute ">
-        <button
-          className="font-bold bg-white rounded-full md:px-4 md:py-2 px-2 py-1 md:mt-24 mt-8 z-30 md:text-base text-black text-xs  w-fit mx-auto ">
-          ui.aceternity.com
-        </button>
+        className="w-full h-[1200px] -top-60 md:-top-110 flex items-center justify-center bg-transparent absolute">
+        <GlassContactForm />
       </div>
+
       <svg
         width="1440"
-        height="890"
-        viewBox="0 0 1440 890"
+        height="1200"
+        viewBox="0 0 1440 1200"
         xmlns="http://www.w3.org/2000/svg"
         className=" absolute -top-60  md:-top-40 w-full">
         <motion.path
@@ -147,4 +139,5 @@ const transition = {
     </div>
   );
 };
+
 export default GoogleGeminiEffect;

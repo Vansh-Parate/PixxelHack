@@ -1,10 +1,7 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
+import { useState, useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { fadeInUp, staggerContainer, scaleOnHover } from '../../utils/motionVariants';
-import { useRef } from 'react';
 import GoogleGeminiEffect from './Google-gemini-effect';
-import { AnimatePresence } from 'framer-motion';
-import { useScroll, useTransform } from 'motion/react';
 
 const ContactSection = () => {
   const [formData, setFormData] = useState({
@@ -14,17 +11,6 @@ const ContactSection = () => {
     message: ''
   });
 
-  const ref = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: ref,
-    offset: ["start start", "end start"],
-  });
- 
-  const pathLengthFirst = useTransform(scrollYProgress, [0, 0.8], [0.2, 1.2]);
-  const pathLengthSecond = useTransform(scrollYProgress, [0, 0.8], [0.15, 1.2]);
-  const pathLengthThird = useTransform(scrollYProgress, [0, 0.8], [0.1, 1.2]);
-  const pathLengthFourth = useTransform(scrollYProgress, [0, 0.8], [0.05, 1.2]);
-  const pathLengthFifth = useTransform(scrollYProgress, [0, 0.8], [0, 1.2]);
 
 
   const handleInputChange = (e) => {
@@ -44,37 +30,10 @@ const ContactSection = () => {
   return (
     <section id="contact" className="py-20 bg-white">
             
-      <div
-      className="h-[400vh] bg-black w-full dark:border dark:border-white/[0.1] rounded-md relative pt-40 overflow-clip"
-      ref={ref}
-    >
-      <GoogleGeminiEffect
-        pathLengths={[
-          pathLengthFirst,
-          pathLengthSecond,
-          pathLengthThird,
-          pathLengthFourth,
-          pathLengthFifth,
-        ]}
-      />
-    </div>
+
 
       <div className="container mx-auto px-4">
-        {/* Section Header */}
-        <motion.div
-          className="text-center mb-16"
-          variants={fadeInUp}
-          initial="initial"
-          whileInView="animate"
-          viewport={{ once: true }}
-        >
-          <h2 className="text-4xl md:text-5xl font-heading font-bold mb-6 text-black">
-            Get In <span className="text-primary-cyan">Touch</span>
-          </h2>
-          <p className="text-xl text-gray-800 max-w-2xl mx-auto">
-            Ready to start your next project? Let's discuss how we can bring your vision to life.
-          </p>
-        </motion.div>
+        
 
         <div className="max-w-6xl mx-auto">
           <motion.div
@@ -141,62 +100,7 @@ const ContactSection = () => {
             </motion.div>
 
             {/* Contact Form */}
-            <motion.div variants={fadeInUp}>
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                  <FormInput
-                    label="Name"
-                    name="name"
-                    type="text"
-                    value={formData.name}
-                    onChange={handleInputChange}
-                    required
-                  />
-                  
-                  <FormInput
-                    label="Email"
-                    name="email"
-                    type="email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    required
-                  />
-                </div>
-                
-                <FormInput
-                  label="Company"
-                  name="company"
-                  type="text"
-                  value={formData.company}
-                  onChange={handleInputChange}
-                />
-                
-                <div>
-                  <label className="block text-sm font-medium text-black mb-2">
-                    Message
-                  </label>
-                  <textarea
-                    name="message"
-                    rows="6"
-                    value={formData.message}
-                    onChange={handleInputChange}
-                    required
-                    className="w-full bg-white border-2 border-gray-400 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-primary-cyan focus:ring-2 focus:ring-primary-cyan/50 transition-all duration-300 resize-none"
-                    placeholder="Tell us about your project..."
-                  />
-                </div>
-                
-                <motion.button
-                  type="submit"
-                  className="w-full bg-gradient-to-r from-primary-cyan to-primary-purple text-white px-8 py-4 rounded-lg font-medium transition-all duration-300 hover:shadow-lg hover:shadow-primary-cyan/25 text-lg"
-                  variants={scaleOnHover}
-                  whileHover="whileHover"
-                  whileTap="whileTap"
-                >
-                  Send Message
-                </motion.button>
-              </form>
-            </motion.div>
+
           </motion.div>
         </div>
       </div>
@@ -221,25 +125,6 @@ const ContactInfo = ({ icon, title, content, description }) => {
         <p className="text-gray-800 text-sm">{description}</p>
       </div>
     </motion.div>
-  );
-};
-
-const FormInput = ({ label, name, type, value, onChange, required }) => {
-  return (
-    <div>
-      <label className="block text-sm font-medium text-black mb-2">
-        {label}
-      </label>
-      <input
-        type={type}
-        name={name}
-        value={value}
-        onChange={onChange}
-        required={required}
-        className="w-full bg-white border-2 border-gray-400 rounded-lg px-4 py-3 text-gray-900 placeholder-gray-500 focus:outline-none focus:border-primary-cyan focus:ring-2 focus:ring-primary-cyan/50 transition-all duration-300"
-        placeholder={`Enter your ${label.toLowerCase()}`}
-      />
-    </div>
   );
 };
 
