@@ -11,6 +11,7 @@ import PortfolioGrid from './components/Portfolio/PortfolioGrid';
 import TeamSection from './components/Team/TeamSection';
 import ContactSection from './components/Contact/ContactSection';
 import GoogleGeminiEffect from './components/Contact/Google-gemini-effect';
+import MysteryElement from './components/MysteryElement/MysteryElement';
 
 function App() {
   const [isLoading, setIsLoading] = useState(true);
@@ -56,6 +57,7 @@ function App() {
             <ServicesSection />
             <PortfolioGrid />
             <TeamSection />
+            <MysteryElement />
 
           </motion.div>
         )}
